@@ -1,0 +1,42 @@
+Network Level Authentication (NLA) is a security feature for Remote Desktop Protocol (RDP) connections in Windows. If you need to disable NLA for any reason, you can use the following methods via command line or PowerShell.
+
+1. Using PowerShell
+To disable NLA via PowerShell, execute the following command:
+
+powershell
+Copy code
+Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Value 0
+This sets the UserAuthentication registry value to 0, effectively disabling NLA.
+
+2. Using Command Prompt (via Registry Editor)
+Run this command in an elevated Command Prompt:
+
+cmd
+Copy code
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v UserAuthentication /t REG_DWORD /d 0 /f
+3. Using Group Policy Command Line (if managed by GPO)
+You can disable NLA by modifying the group policy setting via the Local Group Policy or Group Policy Editor. However, you can also do it using command-line tools by targeting the relevant policy.
+
+4. Restart RDP Service
+After making changes, restart the RDP service to apply the settings:
+
+cmd
+Copy code
+net stop termservice
+net start termservice
+Alternatively, you can reboot the system.
+
+Verification
+After disabling NLA, verify the status with PowerShell:
+
+powershell
+Copy code
+(Get-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp").UserAuthentication
+If the result is 0, NLA is disabled.
+
+Important Notes
+Security Risks: Disabling NLA reduces security by allowing unauthenticated connections to reach the RDP session login screen. Ensure this is done only in a controlled environment.
+Re-enabling NLA: To re-enable NLA, set the UserAuthentication value back to 1:
+powershell
+Copy code
+Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Value 1
