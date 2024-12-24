@@ -1,0 +1,39 @@
+To disable Defender in real time (but it will re-enable automatically after some time):
+
+Using PowerShell:
+
+Set-MpPreference -DisableRealtimeMonitoring $true
+To re-enable real-time monitoring:
+Set-MpPreference -DisableRealtimeMonitoring $false
+
+-----------------------------------------------------------------
+
+2. Permanently Disable Windows Defender
+To permanently disable Windows Defender, you can modify the Group Policy or Windows Registry settings.
+
+Using PowerShell (Disable AntiSpyware)
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name "DisableAntiSpyware" -Value 1
+To re-enable Defender:
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name "DisableAntiSpyware" -Value 0
+-------------------------------------------------------------------------------------------------------------------
+
+Using Command Prompt (via Registry)
+Run these commands in an elevated Command Prompt:
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender" /v DisableAntiSpyware /t REG_DWORD /d 1 /f
+
+Disable Real-Time Monitoring:
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" /v DisableRealtimeMonitoring /t REG_DWORD /d 1 /f
+Stop Windows Defender Service: Use the sc command to stop the Defender service:
+
+sc stop WinDefend
+sc config WinDefend start= disabled
+
+--------------------------------------------------------------
+3. Restart the System
+Some changes require a system restart to take effect.
+
+Verification
+To verify the Defender status:
+
+Using PowerShell:
+Get-MpComputerStatus
